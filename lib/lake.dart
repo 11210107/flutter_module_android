@@ -27,29 +27,29 @@ class LakeWidgetState extends State {
         children: <Widget>[
           new Expanded(
               child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Container(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: new Text(
-                  'Oeschinen Lake Campground',
-                  style: new TextStyle(
-                    fontWeight: FontWeight.bold,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: new Text(
+                      'Oeschinen Lake Campground',
+                      style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              new Container(
-                padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                child: new Text(
-                  'Kandersteg, Switzerland',
-                  style: new TextStyle(
-                    color: Colors.grey[500],
-                  ),
-                ),
-              )
-            ],
-          )),
-              new FavoriteWidget(),
+                  new Container(
+                    padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                    child: new Text(
+                      'Kandersteg, Switzerland',
+                      style: new TextStyle(
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  )
+                ],
+              )),
+          new FavoriteWidget(),
 //          new Icon(
 //            Icons.star,
 //            color: Colors.red[500],
@@ -96,13 +96,16 @@ class LakeWidgetState extends State {
           textSection,
           pavlova,
           new ParentWidget(),
+
         ],
       ),
     );
   }
 
   Column buildButtonColumn(IconData icon, String label) {
-    Color primaryColor = Theme.of(context).primaryColor;
+    Color primaryColor = Theme
+        .of(context)
+        .primaryColor;
     return new Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +142,7 @@ class LakeWidgetState extends State {
             children: <Widget>[
               new Container(
                 padding:
-                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                 child: new Text(
                   'Strawberry Pavlova',
                   style: new TextStyle(
@@ -248,9 +251,10 @@ class _FavoriteWidgetState extends State {
         new Container(
           padding: new EdgeInsets.all(0.0),
           child: new IconButton(
-              icon: _isFavorite?new Icon(Icons.star):new Icon(Icons.star_border),
-              color: Colors.red[500],
-              onPressed: _toggleFavorite,
+            icon: _isFavorite ? new Icon(Icons.star) : new Icon(
+                Icons.star_border),
+            color: Colors.red[500],
+            onPressed: _toggleFavorite,
           ),
         ),
         new SizedBox(
@@ -265,18 +269,18 @@ class _FavoriteWidgetState extends State {
 
   void _toggleFavorite() {
     setState(() {
-      if(_isFavorite){
-        _favoriteCount-=1;
+      if (_isFavorite) {
+        _favoriteCount -= 1;
         _isFavorite = false;
-      }else {
-        _favoriteCount+=1;
+      } else {
+        _favoriteCount += 1;
         _isFavorite = true;
       }
     });
   }
 }
 
-class ParentWidget extends StatefulWidget{
+class ParentWidget extends StatefulWidget {
   @override
   _ParentWidgetState createState() => new _ParentWidgetState();
 
@@ -284,10 +288,11 @@ class ParentWidget extends StatefulWidget{
 
 class _ParentWidgetState extends State {
   bool _active = false;
+
   @override
   Widget build(BuildContext context) {
     return new Container(
-      child: new TapBoxB(active: _active,onChanged: _handleTapBoxChanged),
+      child: new TapboxC(active: _active, onChanged: _handleTapBoxChanged),
     );
   }
 
@@ -299,18 +304,20 @@ class _ParentWidgetState extends State {
 }
 
 class TapBoxB extends StatelessWidget {
-  TapBoxB({Key key,this.active: false,@required this.onChanged}):super(key:key);
+  TapBoxB({Key key, this.active: false, @required this.onChanged})
+      :super(key: key);
 
   final bool active;
   final ValueChanged<bool> onChanged;
+
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
       onTap: _handleTap,
       child: new Container(
-       child: new Center(
+        child: new Center(
           child: new Text(
-            active?'ACTIVE':'INACTIVE',
+            active ? 'ACTIVE' : 'INACTIVE',
             style: new TextStyle(
               fontSize: 32.0,
               color: Colors.white,
@@ -320,7 +327,7 @@ class TapBoxB extends StatelessWidget {
         width: 200.0,
         height: 200.0,
         decoration: new BoxDecoration(
-          color: active? Colors.lightGreen[700]:Colors.grey[600],
+          color: active ? Colors.lightGreen[700] : Colors.grey[600],
 
         ),
       ),
@@ -331,6 +338,71 @@ class TapBoxB extends StatelessWidget {
   void _handleTap() {
     onChanged(!active);
   }
+}
+
+class TapboxC extends StatefulWidget {
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
+  TapboxC({Key key, this.active, this.onChanged}) : super(key: key);
+
+  @override
+  _TapboxCState createState() => new _TapboxCState();
+}
+
+class _TapboxCState extends State<TapboxC> {
+  bool _highlight = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return new GestureDetector(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTap: _handleTap,
+      onTapCancel: _handleTapCancel,
+      child: new Container(
+        child: new Center(
+          child: new Text(
+            widget.active ? 'Active' : 'Inactive',
+            style: new TextStyle(fontSize: 32.0, color: Colors.white),
+          ),
+        ),
+        width: 200.0,
+        height: 200.0,
+        decoration: new BoxDecoration(
+          color:
+            widget.active ? Colors.lightGreen[700]:Colors.grey[600],
+          border: _highlight ? new Border.all(
+            color: Colors.teal[700],
+            width: 10.0,
+          ):null,
+        ),
+      ),
+    );
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _highlight = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  void _handleTap() {
+    widget.onChanged(!widget.active);
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
 }
 
 //buildButtonColumn(IconData call, String s) {
